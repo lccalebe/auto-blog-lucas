@@ -1,7 +1,9 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const Article = require('./models/article');
+const Article = require('./models/Article');
+const AIService = require('./services/aiService');
+const Scheduler = require('./services/scheduler');  // Add this
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -10,8 +12,9 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// Initialize database
+// Initialize database and scheduler
 Article.createTable().catch(console.error);
+Scheduler.start();  // Add this
 
 // Health check route
 app.get('/health', (req, res) => {
@@ -40,28 +43,6 @@ app.get('/api/articles/:id', async (req, res) => {
   } catch (error) {
     console.error('Error fetching article:', error);
     res.status(500).json({ error: 'Failed to fetch article' });
-  }
-});
-
-// Test endpoint
-
-const AIService = require('./services/aiService');
-
-app.post('/api/generate-test', async (req, res) => {
-  try {
-    const topic = AIService.getRandomTopic();
-    console.log(`🤖 Generating article about: ${topic}`);
-    
-    const { title, content } = await AIService.generateArticle(topic);
-    const article = await Article.create(title, content);
-    
-    res.json({ 
-      message: 'Article generated successfully!',
-      article 
-    });
-  } catch (error) {
-    console.error('Error generating article:', error);
-    res.status(500).json({ error: 'Failed to generate article' });
   }
 });
 
