@@ -43,6 +43,28 @@ app.get('/api/articles/:id', async (req, res) => {
   }
 });
 
+// Test endpoint
+
+const AIService = require('./services/aiService');
+
+app.post('/api/generate-test', async (req, res) => {
+  try {
+    const topic = AIService.getRandomTopic();
+    console.log(`🤖 Generating article about: ${topic}`);
+    
+    const { title, content } = await AIService.generateArticle(topic);
+    const article = await Article.create(title, content);
+    
+    res.json({ 
+      message: 'Article generated successfully!',
+      article 
+    });
+  } catch (error) {
+    console.error('Error generating article:', error);
+    res.status(500).json({ error: 'Failed to generate article' });
+  }
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
