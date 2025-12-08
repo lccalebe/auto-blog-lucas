@@ -1,0 +1,54 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: autoblog-postgres-prod
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-bloguser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-blogpass}
+      POSTGRES_DB: ${POSTGRES_DB:-autoblog}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - autoblog-network
+    restart: unless-stopped
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: autoblog-backend
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-bloguser}:${POSTGRES_PASSWORD:-blogpass}@postgres:5432/${POSTGRES_DB:-autoblog}
+      HF_API_KEY: ${HF_API_KEY}
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres
+    networks:
+      - autoblog-network
+    restart: unless-stopped
+
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: autoblog-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - autoblog-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  autoblog-network:
+    driver: bridge
