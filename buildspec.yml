@@ -1,0 +1,42 @@
+version: 0.2
+
+env:
+  variables:
+    AWS_REGION: "eu-central-1"
+    AWS_ACCOUNT_ID: "037036468901"
+    BACKEND_REPO: "auto-blog-backend"
+    FRONTEND_REPO: "auto-blog-frontend"
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+      - BACKEND_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$BACKEND_REPO
+      - FRONTEND_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$FRONTEND_REPO
+      - IMAGE_TAG=${CODEBUILD_RESOLVED_SOURCE_VERSION:-latest}
+      - echo Build started on `date`
+
+  build:
+    commands:
+      - echo Building Docker images...
+      - docker build -t $BACKEND_REPO:$IMAGE_TAG ./backend
+      - docker tag $BACKEND_REPO:$IMAGE_TAG $BACKEND_URI:$IMAGE_TAG
+      - docker tag $BACKEND_REPO:$IMAGE_TAG $BACKEND_URI:latest
+      - docker build -t $FRONTEND_REPO:$IMAGE_TAG ./frontend
+      - docker tag $FRONTEND_REPO:$IMAGE_TAG $FRONTEND_URI:$IMAGE_TAG
+      - docker tag $FRONTEND_REPO:$IMAGE_TAG $FRONTEND_URI:latest
+
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing Docker images to ECR...
+      - docker push $BACKEND_URI:$IMAGE_TAG
+      - docker push $BACKEND_URI:latest
+      - docker push $FRONTEND_URI:$IMAGE_TAG
+      - docker push $FRONTEND_URI:latest
+      - echo Images pushed successfully
+
+artifacts:
+  files:
+    - '**/*'
