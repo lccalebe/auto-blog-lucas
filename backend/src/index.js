@@ -1,9 +1,9 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const Article = require('./models/Article');
-const AIService = require('./services/aiService');
-const Scheduler = require('./services/scheduler');
+const Article = require('./models/Article.js');
+const AIService = require('./services/aiService.js');
+const Scheduler = require('./services/scheduler.js');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
