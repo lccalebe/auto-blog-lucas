@@ -50,7 +50,7 @@ function ArticlesList() {
     <div className="container">
       <header className="header">
         <h1>🤖 Auto-Blog</h1>
-        <p className="subtitle">AI-powered articles, generated daily</p>
+        <p className="subtitle">Articles posted daily</p>
       </header>
 
       {articles.length === 0 ? (
