@@ -90,6 +90,27 @@ Content: [A well-written blog post of 300-500 words with clear paragraphs]`;
       'The Evolution of Mobile Technology',
       'Blockchain Beyond Cryptocurrency',
       'Mental Health in the Digital Age',
+      'How AI is Transforming Healthcare',
+      'The Ethics of Artificial Intelligence',
+      'AI in Creative Industries: Art, Music, and Writing',
+      'The Future of Autonomous Vehicles',
+      'Natural Language Processing and Its Applications',
+      'AI in Education: Personalized Learning',
+      'Robotics in Everyday Life',
+      'The Role of AI in Cybersecurity',
+      'Machine Learning for Small Businesses',
+      'Digital Detox: Finding Balance in a Connected World',
+      'The Gig Economy and Its Future',
+      'Social Media and Mental Health: Coping Strategies',
+      'Virtual Reality and the Future of Entertainment',
+      'Smart Homes: Convenience vs. Privacy',
+      'The Impact of 5G on Society',
+      'Online Privacy in the Modern Age',
+      'Innovations in Renewable Energy',
+      'Space Exploration: AI and Robotics on Other Planets',
+      'The Promise of CRISPR and Gene Editing',
+      'Nanotechnology: Shaping the Future',
+      'Climate Change Solutions Powered by Tech'
     ];
     return topics[Math.floor(Math.random() * topics.length)];
   }
