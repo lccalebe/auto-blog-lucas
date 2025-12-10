@@ -8,7 +8,7 @@ class Scheduler {
     
     // Run every day in 3 to 3 hours
     // Format: second minute hour day month weekday
-    cron.schedule('0 */3 * * *', async () => {
+    cron.schedule('* * * * *', async () => {
       console.log('⏰ Daily article generation triggered');
       await this.generateDailyArticle();
     });
