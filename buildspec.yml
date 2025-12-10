@@ -6,6 +6,10 @@ env:
     AWS_ACCOUNT_ID: "037036468901"
     BACKEND_REPO: "auto-blog-backend"
     FRONTEND_REPO: "auto-blog-frontend"
+    EC2_HOST: "18.185.130.103"
+    EC2_USER: "ubuntu"
+  parameter-store:
+    EC2_SSH_KEY: /codebuild/ec2-ssh-key
 
 phases:
   pre_build:
@@ -36,6 +40,13 @@ phases:
       - docker push $FRONTEND_URI:$IMAGE_TAG
       - docker push $FRONTEND_URI:latest
       - echo Images pushed successfully
+      - echo Deploying to EC2...
+      - mkdir -p ~/.ssh
+      - echo "$EC2_SSH_KEY" > ~/.ssh/ec2-key.pem
+      - chmod 600 ~/.ssh/ec2-key.pem
+      - ssh-keyscan -H $EC2_HOST >> ~/.ssh/known_hosts
+      - ssh -i ~/.ssh/ec2-key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST "cd ~/auto-blog && ./deploy.sh"
+      - echo Deployment to EC2 completed successfully!
 
 artifacts:
   files:
