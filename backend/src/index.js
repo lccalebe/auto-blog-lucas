@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const Article = require('./models/Article');
 const AIService = require('./services/aiService');
-const Scheduler = require('./services/scheduler');  // Add this
+const Scheduler = require('./services/scheduler');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
