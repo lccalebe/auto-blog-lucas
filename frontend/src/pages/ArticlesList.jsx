@@ -49,7 +49,7 @@ function ArticlesList() {
   return (
     <div className="container">
       <header className="header">
-        <h1>🤖 Auto-Generated Blog</h1>
+        <h1>🤖 Auto-Blog</h1>
         <p className="subtitle">AI-powered articles, generated daily</p>
       </header>
 
